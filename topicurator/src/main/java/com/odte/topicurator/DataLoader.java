@@ -5,8 +5,6 @@ import com.odte.topicurator.repository.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-
 @Component
 public class DataLoader implements CommandLineRunner {
 
@@ -30,8 +28,6 @@ public class DataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-
-        LocalDateTime now = LocalDateTime.now();
 
         // Users
         User alice = userRepository.save(new User("alice@example.com", "pass1234", "Alice", 28, "F", "개발자"));
@@ -72,20 +68,20 @@ public class DataLoader implements CommandLineRunner {
                 "우주 탐사에 투자하는 자원은 지구 환경과 인류 문제 해결에 더 쓰여야 함",
                 "https://example.com/article6", "인류의 꿈 실현", "지구 문제 외면", 8));
         // Votes
-        votesRepository.save(new Votes(alice, pc1, "pro"));
-        votesRepository.save(new Votes(alice, pc4, "con"));
-        votesRepository.save(new Votes(bob, pc6, "pro"));
-        votesRepository.save(new Votes(bob, pc1, "con"));
-        votesRepository.save(new Votes(charlie, pc4, "pro"));
-        votesRepository.save(new Votes(charlie, pc6, "con"));
+        votesRepository.save(new Votes(alice, pc1, "찬성"));
+        votesRepository.save(new Votes(alice, pc4, "반대"));
+        votesRepository.save(new Votes(bob, pc6, "찬성"));
+        votesRepository.save(new Votes(bob, pc1, "반대"));
+        votesRepository.save(new Votes(charlie, pc4, "찬성"));
+        votesRepository.save(new Votes(charlie, pc6, "반대"));
 
         // Comments
-        commentsRepository.save(new Comments(pc1, alice, "AI 기술의 장점이 잘 설명되어 있네요", "pro"));
-        commentsRepository.save(new Comments(pc1, bob, "AI로 인해 일자리 문제가 심각할 것 같습니다", "con"));
-        commentsRepository.save(new Comments(pc4, charlie, "탄소 중립 정책은 현실적으로 어렵지만 필요합니다", "pro"));
-        commentsRepository.save(new Comments(pc4, alice, "기업 부담이 커서 반대 의견도 이해가 됩니다", "con"));
-        commentsRepository.save(new Comments(pc6, bob, "우주 탐사는 과학 발전에 중요합니다", "pro"));
-        commentsRepository.save(new Comments(pc6, charlie, "지구 환경 문제를 먼저 해결해야 합니다", "con"));
+        commentsRepository.save(new Comments(pc1, alice, "AI 기술의 장점이 잘 설명되어 있네요", "찬성"));
+        commentsRepository.save(new Comments(pc1, bob, "AI로 인해 일자리 문제가 심각할 것 같습니다", "반대"));
+        commentsRepository.save(new Comments(pc4, charlie, "탄소 중립 정책은 현실적으로 어렵지만 필요합니다", "찬성"));
+        commentsRepository.save(new Comments(pc4, alice, "기업 부담이 커서 반대 의견도 이해가 됩니다", "반대"));
+        commentsRepository.save(new Comments(pc6, bob, "우주 탐사는 과학 발전에 중요합니다", "찬성"));
+        commentsRepository.save(new Comments(pc6, charlie, "지구 환경 문제를 먼저 해결해야 합니다", "반대"));
 
         System.out.println("Initial data loaded successfully.");
     }
