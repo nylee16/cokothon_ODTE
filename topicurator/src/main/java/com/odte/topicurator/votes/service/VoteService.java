@@ -65,7 +65,12 @@ public class VoteService {
         long cons = voteRepository.countConsByNewsId(newsId);
         long neutral = voteRepository.countNeutralByNewsId(newsId);
 
-        return new VoteSummaryDto(pros, cons, neutral);
+        long total = pros + cons + neutral;
+        double proPct = total > 0 ? (pros * 100.0 / total) : 0;
+        double conPct = total > 0 ? (cons * 100.0 / total) : 0;
+        double neutralPct = total > 0 ? (neutral * 100.0 / total) : 0;
+
+        return new VoteSummaryDto(total, pros, cons, neutral, proPct, conPct, neutralPct);
     }
 
     // 📊 분포 통계 조회 (성별/연령/직업)
