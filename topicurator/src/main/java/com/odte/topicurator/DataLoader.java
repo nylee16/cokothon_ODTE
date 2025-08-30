@@ -10,18 +10,18 @@ public class DataLoader implements CommandLineRunner {
 
     private final UserRepository userRepository;
     private final NewsRepository newsRepository;
-    private final ProsnconsRepository prosnconsRepository;
+    private final ProsconsRepository prosconsRepository;
     private final VotesRepository votesRepository;
     private final CommentsRepository commentsRepository;
 
     public DataLoader(UserRepository userRepository,
                       NewsRepository newsRepository,
-                      ProsnconsRepository prosnconsRepository,
+                      ProsconsRepository prosconsRepository,
                       VotesRepository votesRepository,
                       CommentsRepository commentsRepository) {
         this.userRepository = userRepository;
         this.newsRepository = newsRepository;
-        this.prosnconsRepository = prosnconsRepository;
+        this.prosconsRepository = prosconsRepository;
         this.votesRepository = votesRepository;
         this.commentsRepository = commentsRepository;
     }
@@ -55,16 +55,16 @@ public class DataLoader implements CommandLineRunner {
                 "세계",
                 "우주 탐사, 누구의 것인가?",
                 "https://example.com/images/space.jpg"));
-        // Prosncons
-        Prosncons pc1 = prosnconsRepository.save(new Prosncons(news1, bob,
+        // Proscons
+        Proscons pc1 = prosconsRepository.save(new Proscons(news1, bob,
                 "AI는 자동화를 통해 효율성을 높이고 새로운 직업을 창출할 수 있음",
                 "https://example.com/article1", "효율성 증가, 새로운 기회", "일자리 감소 위험", 25));
 
-        Prosncons pc4 = prosnconsRepository.save(new Prosncons(news2, charlie,
+        Proscons pc4 = prosconsRepository.save(new Proscons(news2, charlie,
                 "탄소 중립 정책은 기업과 개인에게 과도한 부담을 줄 수 있음",
                 "https://example.com/article4", "지속가능성 확보", "경제적 부담", 11));
 
-        Prosncons pc6 = prosnconsRepository.save(new Prosncons(news3, bob,
+        Proscons pc6 = prosconsRepository.save(new Proscons(news3, bob,
                 "우주 탐사에 투자하는 자원은 지구 환경과 인류 문제 해결에 더 쓰여야 함",
                 "https://example.com/article6", "인류의 꿈 실현", "지구 문제 외면", 8));
         // Votes

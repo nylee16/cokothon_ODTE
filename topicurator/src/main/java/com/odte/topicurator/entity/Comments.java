@@ -20,8 +20,8 @@ public class Comments {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "prosncons_id")
-    private Prosncons prosncons;
+    @JoinColumn(name = "proscons_id")
+    private Proscons proscons;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -42,8 +42,8 @@ public class Comments {
     @Column(name = "hate_count")
     private Long hateCount;
 
-    public Comments(Prosncons prosncons, User user, String content, String choice) {
-        this.prosncons = prosncons;
+    public Comments(Proscons proscons, User user, String content, String choice) {
+        this.proscons = proscons;
         this.user = user;
         this.content = content;
         this.createdAt = LocalDateTime.now();

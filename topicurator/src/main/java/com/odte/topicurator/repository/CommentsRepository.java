@@ -9,8 +9,8 @@ import org.springframework.data.repository.query.Param;
 
 public interface CommentsRepository extends JpaRepository<Comments, Long> {
     @Query(
-            value = "SELECT c FROM Comments c JOIN FETCH c.user WHERE c.prosncons.id = :prosconsId",
-            countQuery = "SELECT COUNT(c) FROM Comments c WHERE c.prosncons.id = :prosconsId"
+            value = "SELECT c FROM Comments c JOIN FETCH c.user WHERE c.proscons.id = :prosconsId",
+            countQuery = "SELECT COUNT(c) FROM Comments c WHERE c.proscons.id = :prosconsId"
     )
-    Page<Comments> findByProsnconsIdWithUser(@Param("prosconsId") Long prosconsId, Pageable pageable);
+    Page<Comments> findByProsconsIdWithUser(@Param("prosconsId") Long prosconsId, Pageable pageable);
 }

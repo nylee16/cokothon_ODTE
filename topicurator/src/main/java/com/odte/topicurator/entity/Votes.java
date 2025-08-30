@@ -24,8 +24,8 @@ public class Votes {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "prosncons_id")
-    private Prosncons prosncons;
+    @JoinColumn(name = "proscons_id")
+    private Proscons proscons;
 
     @Column(length = 10)
     private String choice;
@@ -33,9 +33,9 @@ public class Votes {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    public Votes(User user, Prosncons prosncons, String choice) {
+    public Votes(User user, Proscons proscons, String choice) {
         this.user = user;
-        this.prosncons = prosncons;
+        this.proscons = proscons;
         this.choice = choice;
         this.createdAt = LocalDateTime.now();
     }

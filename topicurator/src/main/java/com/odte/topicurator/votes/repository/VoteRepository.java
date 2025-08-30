@@ -10,15 +10,15 @@ import java.util.List;
 
 public interface VoteRepository extends JpaRepository<Votes, Long> {
 
-    boolean existsByUserIdAndProsnconsId(Long userId, Long prosnconsId);
+    boolean existsByUserIdAndProsconsId(Long userId, Long prosconsId);
 
-    @Query("SELECT COUNT(v) FROM Votes v WHERE v.prosncons.news.id = :newsId AND v.choice = 'PROS'")
+    @Query("SELECT COUNT(v) FROM Votes v WHERE v.proscons.news.id = :newsId AND v.choice = 'PROS'")
     long countProsByNewsId(@Param("newsId") Long newsId);
 
-    @Query("SELECT COUNT(v) FROM Votes v WHERE v.prosncons.news.id = :newsId AND v.choice = 'CONS'")
+    @Query("SELECT COUNT(v) FROM Votes v WHERE v.proscons.news.id = :newsId AND v.choice = 'CONS'")
     long countConsByNewsId(@Param("newsId") Long newsId);
 
-    @Query("SELECT COUNT(v) FROM Votes v WHERE v.prosncons.news.id = :newsId AND v.choice = 'NEUTRAL'")
+    @Query("SELECT COUNT(v) FROM Votes v WHERE v.proscons.news.id = :newsId AND v.choice = 'NEUTRAL'")
     long countNeutralByNewsId(@Param("newsId") Long newsId);
 
     // 📊 성별 분포
@@ -27,7 +27,7 @@ public interface VoteRepository extends JpaRepository<Votes, Long> {
             "SUM(CASE WHEN v.choice = 'CONS' THEN 1 ELSE 0 END), " +
             "SUM(CASE WHEN v.choice = 'NEUTRAL' THEN 1 ELSE 0 END)) " +
             "FROM Votes v JOIN v.user u " +
-            "WHERE v.prosncons.news.id = :newsId " +
+            "WHERE v.proscons.news.id = :newsId " +
             "GROUP BY u.sex")
     List<VoteBreakdownDto> breakdownByGender(@Param("newsId") Long newsId);
 
@@ -38,7 +38,7 @@ public interface VoteRepository extends JpaRepository<Votes, Long> {
             "SUM(CASE WHEN v.choice = 'CONS' THEN 1 ELSE 0 END), " +
             "SUM(CASE WHEN v.choice = 'NEUTRAL' THEN 1 ELSE 0 END)) " +
             "FROM Votes v JOIN v.user u " +
-            "WHERE v.prosncons.news.id = :newsId " +
+            "WHERE v.proscons.news.id = :newsId " +
             "GROUP BY ((CAST(:currentYear AS int) - u.birthYear)/10)")
     List<VoteBreakdownDto> breakdownByAge(@Param("newsId") Long newsId, @Param("currentYear") int currentYear);
 
@@ -48,7 +48,7 @@ public interface VoteRepository extends JpaRepository<Votes, Long> {
             "SUM(CASE WHEN v.choice = 'CONS' THEN 1 ELSE 0 END), " +
             "SUM(CASE WHEN v.choice = 'NEUTRAL' THEN 1 ELSE 0 END)) " +
             "FROM Votes v JOIN v.user u " +
-            "WHERE v.prosncons.news.id = :newsId " +
+            "WHERE v.proscons.news.id = :newsId " +
             "GROUP BY u.job")
     List<VoteBreakdownDto> breakdownByJob(@Param("newsId") Long newsId);
 }

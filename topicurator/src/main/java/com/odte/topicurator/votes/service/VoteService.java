@@ -1,7 +1,7 @@
 package com.odte.topicurator.votes.service;
 
 import com.odte.topicurator.entity.News;
-import com.odte.topicurator.entity.Prosncons;
+import com.odte.topicurator.entity.Proscons;
 import com.odte.topicurator.entity.User;
 import com.odte.topicurator.entity.Votes;
 import com.odte.topicurator.votes.dto.VoteBreakdownDto;
@@ -10,7 +10,7 @@ import com.odte.topicurator.votes.dto.VoteSummaryDto;
 import com.odte.topicurator.votes.dto.VoteCreationResponseDto;
 import com.odte.topicurator.votes.repository.VoteRepository;
 import com.odte.topicurator.repository.NewsRepository;
-import com.odte.topicurator.repository.ProsnconsRepository;
+import com.odte.topicurator.repository.ProsconsRepository;
 import com.odte.topicurator.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class VoteService {
 
     private final VoteRepository voteRepository;
     private final NewsRepository newsRepository;
-    private final ProsnconsRepository prosnconsRepository;
+    private final ProsconsRepository prosconsRepository;
     private final UserRepository userRepository;
 
     @Transactional
@@ -34,14 +34,14 @@ public class VoteService {
         News news = newsRepository.findById(newsId)
                 .orElseThrow(() -> new IllegalArgumentException("뉴스를 찾을 수 없습니다."));
 
-        Prosncons prosncons = prosnconsRepository.findByNewsId(newsId)
+        Proscons proscons = prosconsRepository.findByNewsId(newsId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 뉴스에 대한 찬반 요약이 없습니다."));
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
         // ⚠️ 중복 투표 방지 로직은 필요 없다고 하셨으니 주석 처리하거나 삭제
-        // if (voteRepository.existsByUserIdAndProsnconsId(userId, prosncons.getId())) {
+        // if (voteRepository.existsByUserIdAndProsconsId(userId, proscons.getId())) {
         //     throw new IllegalStateException("이미 투표했습니다.");
         // }
 
@@ -53,7 +53,7 @@ public class VoteService {
 
         Votes vote = new Votes();
         vote.setUser(user);
-        vote.setProsncons(prosncons);
+        vote.setProscons(proscons);
         vote.setChoice(choice);
         vote.setCreatedAt(LocalDateTime.now());
 

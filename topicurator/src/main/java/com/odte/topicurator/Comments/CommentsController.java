@@ -21,14 +21,14 @@ public class CommentsController {
 
     private final CommentsService commentsService;
 
-    @GetMapping("/proscons/{prosnconsId}/comments")
+    @GetMapping("/proscons/{prosconsId}/comments")
     public ResponseEntity<Page<CommentsDto>> getComments(
-            @PathVariable Long prosnconsId,
+            @PathVariable Long prosconsId,
             @RequestParam(defaultValue = "latest") String sort,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
-        Page<CommentsDto> commentsPage = commentsService.getCommentsByProsnconsId(prosnconsId, sort, page, size);
+        Page<CommentsDto> commentsPage = commentsService.getCommentsByProsconsId(prosconsId, sort, page, size);
         return ResponseEntity.ok(commentsPage);
     }
 

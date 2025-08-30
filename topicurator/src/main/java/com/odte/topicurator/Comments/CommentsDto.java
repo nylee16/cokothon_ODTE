@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 public record CommentsDto (
         Long id,
-        Long prosnconsId,
+        Long prosconsId,
         Long userId,
         String content,
         String username,

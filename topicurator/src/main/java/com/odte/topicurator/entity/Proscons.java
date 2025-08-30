@@ -9,12 +9,12 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "prosncons")
+@Table(name = "proscons")
 @Data
 @Getter
 @Setter
 @NoArgsConstructor
-public class Prosncons {
+public class Proscons {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -44,7 +44,7 @@ public class Prosncons {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    public Prosncons(News news, User createdBy, String summary, String link, String pros, String cons, Integer bias) {
+    public Proscons(News news, User createdBy, String summary, String link, String pros, String cons, Integer bias) {
         this.news = news;
         this.createdBy = createdBy;
         this.summary = summary;
