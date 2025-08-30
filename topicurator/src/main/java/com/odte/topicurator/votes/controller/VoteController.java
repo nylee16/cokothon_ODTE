@@ -1,6 +1,6 @@
 package com.odte.topicurator.votes.controller;
 
-import com.odte.topicurator.entity.Votes;
+import com.odte.topicurator.votes.dto.VoteCreationResponseDto;
 import com.odte.topicurator.votes.dto.VoteRequestDto;
 import com.odte.topicurator.votes.dto.VoteSummaryDto;
 import com.odte.topicurator.votes.dto.VoteBreakdownDto;
@@ -23,14 +23,14 @@ public class VoteController {
 
     // 🗳️ 투표 등록
     @PutMapping("/{newsId}/votes")
-    public ResponseEntity<ApiResponse<Votes>> vote(
+    public ResponseEntity<ApiResponse<VoteCreationResponseDto>> vote(
             @PathVariable Long newsId,
             @RequestBody VoteRequestDto requestDto,
             @AuthenticationPrincipal CustomUserDetails userDetails // ✅ JWT 연동된 사용자 정보 주입
     ) {
         Long userId = userDetails.getId(); // User 엔티티 ID 바로 꺼냄
-        Votes vote = voteService.vote(newsId, userId, requestDto);
-        return ResponseEntity.ok(ApiResponse.success("투표 등록 성공", vote));
+        VoteCreationResponseDto voteResponse = voteService.vote(newsId, userId, requestDto);
+        return ResponseEntity.ok(ApiResponse.success("투표 등록 성공", voteResponse));
     }
 
     // 📊 전체 통계 조회

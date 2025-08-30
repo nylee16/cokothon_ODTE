@@ -28,7 +28,7 @@ public class VoteService {
     private final UserRepository userRepository;
 
     @Transactional
-    public Votes vote(Long newsId, Long userId, VoteRequestDto requestDto) {
+    public VoteCreationResponseDto vote(Long newsId, Long userId, VoteRequestDto requestDto) {
         News news = newsRepository.findById(newsId)
                 .orElseThrow(() -> new IllegalArgumentException("뉴스를 찾을 수 없습니다."));
 
@@ -55,7 +55,9 @@ public class VoteService {
         vote.setChoice(choice);
         vote.setCreatedAt(LocalDateTime.now());
 
-        return voteRepository.save(vote);
+        Votes savedVote = voteRepository.save(vote);
+
+        return new VoteCreationResponseDto(savedVote.getId(), newsId, savedVote.getChoice());
     }
 
     // 📊 전체 통계 조회
