@@ -38,6 +38,7 @@ public class JwtProvider {
         Instant now = Instant.now();
         return Jwts.builder()
                 .setSubject(u.getId().toString())
+                .setId(UUID.randomUUID().toString())
                 .claim("username", u.getUsername())
                 .setIssuedAt(Date.from(now))
                 .setExpiration(Date.from(now.plus(accessTtlMin, ChronoUnit.MINUTES)))

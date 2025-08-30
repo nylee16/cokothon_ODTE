@@ -1,14 +1,14 @@
+// file: src/main/java/com/odte/topicurator/auth/application/AuthService.java
 package com.odte.topicurator.auth.application;
 
 import com.odte.topicurator.auth.controller.dto.*;
 import com.odte.topicurator.auth.Domain.UserAccount;
 import com.odte.topicurator.auth.exception.exceptionhandler.ApiException;
-import com.odte.topicurator.auth.exception.AuthErrorCode;
+import com.odte.topicurator.auth.exception.exceptionhandler.AuthErrorCode;
 import com.odte.topicurator.auth.Infrastructure.JwtProvider;
 import com.odte.topicurator.auth.Infrastructure.TokenBlacklist;
 import com.odte.topicurator.auth.Infrastructure.UserAccountRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -46,34 +46,41 @@ public class AuthService {
     public TokenRes login(LoginReq r) {
         var u = users.findByEmail(r.emailOrUsername())
                 .or(() -> users.findByUsername(r.emailOrUsername()))
-                .orElseThrow(() -> new BadCredentialsException("NOT_FOUND"));
+                .orElseThrow(() -> new ApiException(AuthErrorCode.INVALID_CREDENTIALS));
         if (!encoder.matches(r.password(), u.getPassword()))
-            throw new BadCredentialsException("BAD_CREDENTIALS");
+            throw new ApiException(AuthErrorCode.INVALID_CREDENTIALS);
         return new TokenRes(jwt.createAccess(u), jwt.createRefresh(u));
     }
 
+    @Transactional
     public TokenRes refresh(String refreshToken) {
         var jws = jwt.parse(refreshToken);
-        if (!"refresh".equals(String.valueOf(jws.getBody().get("type"))))
+        var type = String.valueOf(jws.getBody().get("type"));
+        if (!"refresh".equals(type))
             throw new ApiException(AuthErrorCode.INVALID_REFRESH_TOKEN);
+
+        // 재사용 방지: 블랙리스트에 있으면 거부
+        if (blacklist.isBlacklisted(refreshToken))
+            throw new ApiException(AuthErrorCode.INVALID_REFRESH_TOKEN);
+
         Long uid = Long.valueOf(jws.getBody().getSubject());
         var u = users.findById(uid).orElseThrow(() -> new ApiException(AuthErrorCode.USER_NOT_FOUND));
-        return new TokenRes(jwt.createAccess(u), jwt.createRefresh(u)); // 회전
+
+        // 기존 refresh 자체 블랙리스트(회전)
+        var ttl = Duration.between(Instant.now(), jws.getBody().getExpiration().toInstant());
+        blacklist.blacklist(refreshToken, ttl);
+
+        return new TokenRes(jwt.createAccess(u), jwt.createRefresh(u));
     }
 
-    public void logout(String accessToken, String refreshToken) {
+    public void logout(String accessToken) {
+        if (accessToken == null) return;
         try {
             var a = jwt.parse(accessToken);
             var ttl = Duration.between(Instant.now(), a.getBody().getExpiration().toInstant());
-            blacklist.blacklist(String.valueOf(a.getBody().getId() == null ? accessToken : a.getBody().getId()), ttl);
+            var idOrToken = a.getBody().getId() != null ? a.getBody().getId() : accessToken;
+            blacklist.blacklist(String.valueOf(idOrToken), ttl);
         } catch (Exception ignored) {}
-        if (refreshToken != null) {
-            try {
-                var r = jwt.parse(refreshToken);
-                var ttl = Duration.between(Instant.now(), r.getBody().getExpiration().toInstant());
-                blacklist.blacklist(String.valueOf(r.getBody().getId() == null ? refreshToken : r.getBody().getId()), ttl);
-            } catch (Exception ignored) {}
-        }
     }
 
     public MeRes me(Long uid) {

@@ -1,8 +1,10 @@
+// file: src/main/java/com/odte/topicurator/auth/controller/UserController.java
 package com.odte.topicurator.auth.controller;
 
 import com.odte.topicurator.auth.application.AuthService;
 import com.odte.topicurator.auth.controller.dto.MeRes;
 import com.odte.topicurator.auth.controller.dto.UpdateMeReq;
+import com.odte.topicurator.common.dto.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -17,15 +19,15 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public MeRes me(Authentication authentication){
+    public ResponseEntity<ApiResponse<MeRes>> me(Authentication authentication){
         Long uid = (Long) authentication.getPrincipal();
-        return auth.me(uid);
+        return ResponseEntity.ok(ApiResponse.success("조회 성공", auth.me(uid)));
     }
 
     @PatchMapping("/me")
-    public ResponseEntity<Void> update(Authentication authentication, @RequestBody UpdateMeReq req){
+    public ResponseEntity<ApiResponse<Void>> update(Authentication authentication, @RequestBody UpdateMeReq req){
         Long uid = (Long) authentication.getPrincipal();
         auth.updateMe(uid, req);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(ApiResponse.successWithNoData("수정 완료"));
     }
 }
