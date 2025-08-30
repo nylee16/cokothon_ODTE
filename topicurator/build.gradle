@@ -43,6 +43,19 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 
+	// gemini
+	implementation("com.google.genai:google-genai:1.15.0")
+
+	// page 관련
+	implementation 'org.jsoup:jsoup:1.17.2'
+
+	// webclient
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+	// kotlin
+	implementation 'org.jetbrains.kotlin:kotlin-stdlib'
+	implementation 'org.jetbrains.kotlin:kotlin-reflect'
+
 	// (선택) 소셜로그인 할거면 유지
 	// implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 

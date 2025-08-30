@@ -51,3 +51,9 @@ logging:
     org.springframework.security: INFO
     org.hibernate.SQL: DEBUG            # 실행된 SQL
     org.hibernate.orm.jdbc.bind: TRACE  # 바인드 파라미터 (시끄러우면 INFO/DEBUG로 낮춰도 됨)
+
+llm:
+  provider: gemini
+  api-key: AIzaSyCDjxnT9kWNnCdR3XITGguBVhm8J2oEbYo
+  base-url: https://generativelanguage.googleapis.com
+  model: gemini-2.0-flash
