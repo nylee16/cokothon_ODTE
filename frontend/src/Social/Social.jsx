@@ -1,26 +1,32 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import logo from "../assets/logo.png"; // 실제 경로 맞게 수정
-import profileIcon from "../assets/profile-icon.png"; // 실제 경로 맞게 수정
+import axios from "axios";
+import logo from "../assets/logo.png";
+import profileIcon from "../assets/profile-icon.png";
 import "./Social.css";
 
-const mockNews = {
-  id: 1,
-  title: "1. '노란봉투법' 국회 통과…",
-  summary:
-    "필리버스터가 끝난 후, 노란봉투법이 국회 본회의를 통과했다. 이 법은 하청 노동자들이 원청과 직접 교섭할 수 있도록 허용하고, 파업으로 인한 손해배상 책임을 제한하는 내용을 담고 있다. 국민의힘은 이에 반발하며 퇴장했고, 민주당과 노동계는 역사적인 법안 통과라며 환영했다.",
-  pollingPercent: 0,
-  impression: 1000,
-};
-
-const mockProsCons = {
-  pros: "노동자의 정당한 권리 보장, 원청-하청 간 교섭권 강화 주장",
-  cons: "법의 지나친 노조 권한 강화로 인한 기업 경영 부담 우려",
-};
-
 function Social() {
+  const [news, setNews] = useState(null);
+  const [prosCons, setProsCons] = useState(null);
+  const [voteSummary, setVoteSummary] = useState(null);
   const [selected, setSelected] = useState(null);
   const navigate = useNavigate();
+
+  // 예시: 첫 번째 뉴스(사회 분야) 가져오기
+  useEffect(() => {
+    axios.get('/api/news?category=사회&page=0&size=1&sort=createdAt,desc')
+      .then(res => {
+        if (res.data && res.data.length > 0) {
+          setNews(res.data);
+          // proscons 정보 가져오기
+          axios.get(`/api/news/${res.data.id}/proscons`)
+            .then(pcRes => setProsCons(pcRes.data));
+          // 투표 비율 가져오기
+          axios.get(`/api/news/${res.data.id}/votes/summary`)
+            .then(voteRes => setVoteSummary(voteRes.data));
+        }
+      });
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
@@ -28,16 +34,28 @@ function Social() {
   };
 
   const handleDetailClick = () => {
-    navigate(`/society/detail/${mockNews.id}`);
+    if (news) navigate(`/society/detail/${news.id}`);
   };
 
   const handleResultClick = () => {
-    navigate("/vote_detail"); // 원하는 경로로 변경
+    navigate("/vote_detail");
+  };
+
+  // 찬성/반대/중도 투표 API 연동
+  const handleVote = (choice) => {
+    if (!news) return;
+    axios.put(`/api/news/${news.id}/votes`, { choice })
+      .then(() => {
+        setSelected(choice);
+        // 투표 비율 갱신
+        axios.get(`/api/news/${news.id}/votes/summary`)
+          .then(res => setVoteSummary(res.data));
+      });
   };
 
   return (
     <div className="social-container">
-      {/* 네비게이션 바 직접 포함 */}
+      {/* 네비게이션 바 */}
       <nav className="navbar-social">
         <div className="navbar-left">
           <Link to="/home" className="navbar-logo">
@@ -61,41 +79,46 @@ function Social() {
 
       <main className="social-main">
         <h1 className="social-title">사회 분야</h1>
-        <div className="social-news-card-detail">
-          <span className="social-news-title">{mockNews.title}</span>
-          <span className="social-news-underline" onClick={handleDetailClick}>
-            {" "}기사 자세히 보기{" "}
-          </span>
-          <p>{mockNews.summary}</p>
-          <p>
-            기사 찬반율: {mockNews.pollingPercent}% / 조회수: {mockNews.impression}
-          </p>
-        </div>
-        <div className="social-pros-cons-section">
-          <div className="social-side-buttons">
-            <button
-              className={`social-pros-cons-btn${selected === "찬성" ? " selected" : ""}`}
-              onClick={() => setSelected("찬성")}
-            >
-              <span className="social-pros-cons-title">찬성</span><br />{mockProsCons.pros}
-            </button>
-            <span className="social-pros-cons-vs">VS</span>
-            <button
-              className={`social-pros-cons-btn${selected === "반대" ? " selected" : ""}`}
-              onClick={() => setSelected("반대")}
-            >
-              <span className="social-pros-cons-title">반대</span><br />{mockProsCons.cons}
-            </button>
+        {news && (
+          <div className="social-news-card-detail">
+            <span className="social-news-title">{news.title}</span>
+            <span className="social-news-underline" onClick={handleDetailClick}>
+              {" "}기사 자세히 보기{" "}
+            </span>
+            <p>{news.description}</p>
+            <p>
+              기사 찬반율: {voteSummary ? voteSummary.pro : 0}% / 조회수: {news.views}
+            </p>
           </div>
-          <div className="social-middle-button-container">
-            <button
-              className={`social-pros-cons-btn${selected === "중도" ? " selected" : ""}`}
-              onClick={() => setSelected("중도")}
-            >
-              <span className="social-pros-cons-title">중도</span>
-            </button>
+        )}
+
+        {prosCons && (
+          <div className="social-pros-cons-section">
+            <div className="social-side-buttons">
+              <button
+                className={`social-pros-cons-btn${selected === "pro" ? " selected" : ""}`}
+                onClick={() => handleVote("pro")}
+              >
+                <span className="social-pros-cons-title">찬성</span><br />{prosCons.pros}
+              </button>
+              <span className="social-pros-cons-vs">VS</span>
+              <button
+                className={`social-pros-cons-btn${selected === "con" ? " selected" : ""}`}
+                onClick={() => handleVote("con")}
+              >
+                <span className="social-pros-cons-title">반대</span><br />{prosCons.cons}
+              </button>
+            </div>
+            <div className="social-middle-button-container">
+              <button
+                className={`social-pros-cons-btn${selected === "neutral" ? " selected" : ""}`}
+                onClick={() => handleVote("neutral")}
+              >
+                <span className="social-pros-cons-title">중도</span>
+              </button>
+            </div>
           </div>
-        </div>
+        )}
         <button className="social-result-btn" onClick={handleResultClick}>
           투표 결과 살펴보기
         </button>

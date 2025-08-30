@@ -1,103 +1,81 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 import logo from "../assets/logo.png";
 import profileIcon from "../assets/profile-icon.png";
 import thumbsUp from "../assets/like_before.png";
 import thumbsDown from "../assets/dislike_before.png";
 import "./VoteDetail.css";
 
+// 실제 페이지 진입 시 newsId, prosConsId는 props나 router param 등에서 받아야 함
+const newsId = 1;
+const prosconsId = 1;
+
 function VoteDetail() {
   const navigate = useNavigate();
 
-  // 페이지 렌더 시 스크롤 맨 위로 이동
   useEffect(() => {
-  window.scrollTo(0, 120); // 네비 높이만큼 스크롤 아래로 이동
-}, []);
+    window.scrollTo(0, 120);
+  }, []);
+
+  const [summary, setSummary] = useState({ pro: 0, con: 0, neutral: 0 });
+  const [ageData, setAgeData] = useState([]);
+  const [jobData, setJobData] = useState([]);
+  const [comments, setComments] = useState([]);
+  const [commentText, setCommentText] = useState("");
+
+  useEffect(() => {
+    // 투표 비율 기본정보
+    axios.get(`/api/news/${newsId}/votes/summary`).then(res => {
+      setSummary(res.data);
+    });
+    // 나이 투표 분포
+    axios.get(`/api/news/${newsId}/votes/breakdown?dimension=age`).then(res => {
+      setAgeData(res.data); // [{label, percent}]
+    });
+    // 직업 투표 분포
+    axios.get(`/api/news/${newsId}/votes/breakdown?dimension=job`).then(res => {
+      setJobData(res.data); // [{label, percent}]
+    });
+    // 댓글 불러오기
+    axios.get(`/api/proscons/${prosconsId}/comments?sort=latest&page=0&size=20`).then(res => {
+      setComments(res.data); // [{id, user_id, username, choice, created_at, content, like, hate}]
+    });
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
     navigate("/");
   };
 
-  const jobData = [
-    { label: "대학생", percent: 25 },
-    { label: "직장인", percent: 25 },
-    { label: "전문가", percent: 25 },
-    { label: "기타", percent: 25 },
-  ];
-
-  const [comments, setComments] = useState([
-    {
-      username: "사용자1",
-      type: "찬성",
-      date: "2025.08.30",
-      text: "찬성합니다. (내용)",
-      likes: 10,
-      dislikes: 5,
-      likedByUser: false,
-      dislikedByUser: false,
-    },
-    {
-      username: "사용자2",
-      type: "반대",
-      date: "2025.08.30",
-      text: "반대합니다. (내용)",
-      likes: 10,
-      dislikes: 5,
-      likedByUser: false,
-      dislikedByUser: false,
-    },
-  ]);
-
-  const [commentText, setCommentText] = useState("");
-
+  // 댓글 등록
   const handleCommentSubmit = () => {
     if (commentText.trim() === "") return;
-    setComments([
-      ...comments,
-      {
-        username: `사용자${comments.length + 1}`,
-        type: "중도",
-        date: "2025.08.31",
-        text: commentText,
-        likes: 0,
-        dislikes: 0,
-        likedByUser: false,
-        dislikedByUser: false,
-      },
-    ]);
-    setCommentText("");
-  };
-
-  const handleLike = (idx) => {
-    setComments((comments) => {
-      const newComments = [...comments];
-      const comment = newComments[idx];
-      if (!comment.likedByUser) {
-        comment.likes += 1;
-        comment.likedByUser = true;
-        if (comment.dislikedByUser) {
-          comment.dislikes -= 1;
-          comment.dislikedByUser = false;
-        }
-      }
-      return newComments;
+    axios.post(`/api/proscons/${prosconsId}/comments`, {
+      content: commentText,
+      choice: "neutral" // 선택지 버튼 추가하면 값 변경 가능
+    }).then(res => {
+      setComments([res.data, ...comments]);
+      setCommentText("");
     });
   };
 
+  // 댓글 공감/비공감 토글
+  const handleLike = (idx) => {
+    const targetId = comments[idx].id;
+    axios.post(`/api/comments/${targetId}/like`).then(() => {
+      // 업데이트 fetch
+      axios.get(`/api/proscons/${prosconsId}/comments?sort=latest&page=0&size=20`).then(res => {
+        setComments(res.data);
+      });
+    });
+  };
   const handleDislike = (idx) => {
-    setComments((comments) => {
-      const newComments = [...comments];
-      const comment = newComments[idx];
-      if (!comment.dislikedByUser) {
-        comment.dislikes += 1;
-        comment.dislikedByUser = true;
-        if (comment.likedByUser) {
-          comment.likes -= 1;
-          comment.likedByUser = false;
-        }
-      }
-      return newComments;
+    const targetId = comments[idx].id;
+    axios.post(`/api/comments/${targetId}/hate`).then(() => {
+      axios.get(`/api/proscons/${prosconsId}/comments?sort=latest&page=0&size=20`).then(res => {
+        setComments(res.data);
+      });
     });
   };
 
@@ -117,18 +95,10 @@ function VoteDetail() {
           <Link to="/world">세계</Link>
         </div>
         <div className="vote-navbar-right">
-          <button
-            className="vote-navbar-logout"
-            onClick={handleLogout}
-            type="button"
-          >
+          <button className="vote-navbar-logout" onClick={handleLogout} type="button">
             로그아웃
           </button>
-          <img
-            src={profileIcon}
-            alt="프로필 아이콘"
-            className="vote-navbar-profile"
-          />
+          <img src={profileIcon} alt="프로필 아이콘" className="vote-navbar-profile" />
         </div>
       </nav>
 
@@ -136,46 +106,58 @@ function VoteDetail() {
         <h1 className="vote-detail-unique-title">투표 결과</h1>
         <div className="vote-detail-unique-card">
           <span className="vote-detail-unique-news-title">
-            1. '노란봉투법' 국회 통과...
+            {/* 동적으로 기사 제목 넣기 (추가 fetch 필요) */}
+            '노란봉투법' 국회 통과...
           </span>
           <div className="vote-detail-unique-summary-cards">
             <div className="vote-detail-unique-summary-box">
               찬성
               <br />
-              : 30%
+              : {summary.pro || 0}%
             </div>
             <div className="vote-detail-unique-summary-box">
               중도
               <br />
-              : 40%
+              : {summary.neutral || 0}%
             </div>
             <div className="vote-detail-unique-summary-box">
               반대
               <br />
-              : 30%
+              : {summary.con || 0}%
             </div>
           </div>
         </div>
         <hr className="vote-detail-unique-divider" />
         <h2 className="vote-detail-unique-age-title">나이대별 결과</h2>
         <div className="vote-detail-unique-age-bars">
-          {["20대", "30대", "40대", "50대", "60대"].map((age) => (
-            <div key={age} className="vote-detail-unique-age-bar-row">
-              <span className="vote-detail-unique-age-label">{age}</span>
+          {(ageData.length > 0 ? ageData : [
+            { label: "20대", percent: 0 },
+            { label: "30대", percent: 0 },
+            { label: "40대", percent: 0 },
+            { label: "50대", percent: 0 },
+            { label: "60대", percent: 0 }
+          ]).map((age, i) => (
+            <div key={age.label} className="vote-detail-unique-age-bar-row">
+              <span className="vote-detail-unique-age-label">{age.label}</span>
               <div className="vote-detail-unique-age-bar-outer">
                 <div
                   className="vote-detail-unique-age-bar-inner"
-                  style={{ width: "20%" }}
+                  style={{ width: `${age.percent}%` }}
                 />
               </div>
-              <span className="vote-detail-unique-age-percent">20%</span>
+              <span className="vote-detail-unique-age-percent">{age.percent}%</span>
             </div>
           ))}
         </div>
         <hr className="vote-detail-unique-divider" />
         <h2 className="vote-detail-unique-job-title">직업별 결과</h2>
         <div className="vote-detail-unique-job-bars">
-          {jobData.map((job) => (
+          {(jobData.length > 0 ? jobData : [
+            { label: "대학생", percent: 0 },
+            { label: "직장인", percent: 0 },
+            { label: "전문가", percent: 0 },
+            { label: "기타", percent: 0 }
+          ]).map((job) => (
             <div key={job.label} className="vote-detail-unique-job-bar-row">
               <span className="vote-detail-unique-job-label">{job.label}</span>
               <div className="vote-detail-unique-job-bar-outer">
@@ -206,38 +188,32 @@ function VoteDetail() {
         </div>
         <div className="vote-detail-unique-comments">
           {comments.map((c, i) => (
-            <div key={i} className="vote-detail-unique-comment-item">
+            <div key={c.id || i} className="vote-detail-unique-comment-item">
               <div className="vote-detail-unique-comment-header">
-                <span className={`vote-detail-unique-comment-username ${c.type}`}>
-                  {c.username}
+                <span className={`vote-detail-unique-comment-username ${c.choice}`}>
+                  {c.username || c.user_id}
                 </span>
-                <span className="vote-detail-unique-comment-type">{c.type}</span>
-                <span className="vote-detail-unique-comment-date">{c.date}</span>
+                <span className="vote-detail-unique-comment-type">{c.choice}</span>
+                <span className="vote-detail-unique-comment-date">{c.created_at}</span>
               </div>
-              <div className="vote-detail-unique-comment-content">{c.text}</div>
+              <div className="vote-detail-unique-comment-content">{c.content}</div>
               <div className="vote-detail-unique-comment-actions">
                 <img
                   src={thumbsUp}
                   alt="좋아요"
                   className="vote-detail-unique-comment-action-icon"
                   onClick={() => handleLike(i)}
-                  style={{
-                    cursor: c.likedByUser ? "default" : "pointer",
-                    opacity: c.likedByUser ? 0.5 : 1,
-                  }}
+                  style={{ cursor: "pointer" }}
                 />
-                <span className="vote-detail-unique-comment-action-count">{c.likes}</span>
+                <span className="vote-detail-unique-comment-action-count">{c.like || 0}</span>
                 <img
                   src={thumbsDown}
                   alt="싫어요"
                   className="vote-detail-unique-comment-action-icon"
                   onClick={() => handleDislike(i)}
-                  style={{
-                    cursor: c.dislikedByUser ? "default" : "pointer",
-                    opacity: c.dislikedByUser ? 0.5 : 1,
-                  }}
+                  style={{ cursor: "pointer" }}
                 />
-                <span className="vote-detail-unique-comment-action-count">{c.dislikes}</span>
+                <span className="vote-detail-unique-comment-action-count">{c.hate || 0}</span>
               </div>
             </div>
           ))}
@@ -246,6 +222,5 @@ function VoteDetail() {
     </div>
   );
 }
-
 export default VoteDetail;
 

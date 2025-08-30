@@ -1,41 +1,32 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import './Home.css';
 import logo from '../assets/logo.png';
-import img1 from '../assets/news1.jpg';
-import img2 from '../assets/news2.jpg';
-import img3 from '../assets/news3.jpg';
-import profileIcon from '../assets/profile-icon.png'; 
+import profileIcon from '../assets/profile-icon.png';
 import { Link, useNavigate } from 'react-router-dom';
 
-const newsList = [
-  {
-    img: img1,
-    title: '사망사고 건설사 명단공개 재추진',
-    subtitle: '“안전 관리 유도” vs “실효성 낮아”',
-  },
-  {
-    img: img2,
-    title: '노란봉투법 국회 통과··',
-    subtitle: '“역사적 순간” vs “불법파업 조장”',
-  },
-  {
-    img: img3,
-    title: 'AI 교과서 도입 찬반 논란',
-    subtitle: '“맞춤형 학습 지원” vs “디지털 과의존”',
-  },
-];
-
 export default function Home() {
+  const [newsList, setNewsList] = useState([]);
   const navigate = useNavigate();
+
+  // 뉴스 목록 API 호출
+  useEffect(() => {
+    axios
+      .get('/api/news?page=0&size=10&sort=createdAt,desc', {
+        headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
+      })
+      .then((res) => setNewsList(res.data.content || []))
+      .catch(() => setNewsList([]));
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('authToken');
     navigate('/');
   };
 
-  // 카드 클릭시 Social 페이지로 이동
-  const handleCardClick = () => {
-    navigate('/society'); // Social 컴포넌트 경로에 맞게 조정
+  // 카드 클릭 시 상세 페이지 이동
+  const handleCardClick = (newsId) => {
+    navigate(`/news/${newsId}`);
   };
 
   return (
@@ -63,19 +54,24 @@ export default function Home() {
       <main>
         <div className="news-list">
           {newsList.map((news, idx) => (
-            <div 
-              className="news-card" 
-              key={idx}
-              onClick={handleCardClick}
+            <div
+              className="news-card"
+              key={news.id}
+              onClick={() => handleCardClick(news.id)}
               style={{ cursor: 'pointer' }}
               role="button"
-              tabIndex={0} // 키보드 접근성 추가
-              onKeyDown={(e) => { if (e.key === 'Enter') handleCardClick(); }}
+              tabIndex={0}
+              onKeyDown={(e) => { if (e.key === 'Enter') handleCardClick(news.id); }}
             >
-              <img src={news.img} alt={news.title} className="news-img" />
+              {/* image_url 컬럼 값이 있을 때 require로 읽어서 이미지를 로컬에서 출력 */}
+              <img
+                src={news.image_url ? require(`../assets/${news.image_url}`) : require('../assets/default.jpg')}
+                alt={news.title}
+                className="news-img"
+              />
               <div className="news-overlay">
                 <h3>{news.title}</h3>
-                <p>{news.subtitle}</p>
+                <p>{news.teaser_text}</p>
               </div>
             </div>
           ))}
