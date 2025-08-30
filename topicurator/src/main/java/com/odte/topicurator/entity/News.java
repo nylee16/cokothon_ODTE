@@ -1,10 +1,7 @@
 package com.odte.topicurator.entity;
 
-import lombok.Data;
+import lombok.*;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 
@@ -14,6 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class News {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,6 +32,7 @@ public class News {
 
     private Long views;
 
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @Column(name = "teaser_text", length = 255)
@@ -41,4 +40,15 @@ public class News {
 
     @Column(name = "image_url", length = 255)
     private String imageUrl;
+
+    public News(User createdBy, String title, String description, String category, String teaserText, String imageUrl) {
+        this.createdBy = createdBy;
+        this.title = title;
+        this.description = description;
+        this.category = category;
+        this.views = 0L;
+        this.createdAt = LocalDateTime.now();
+        this.teaserText = teaserText;
+        this.imageUrl = imageUrl;
+    }
 }

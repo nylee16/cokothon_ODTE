@@ -2,11 +2,18 @@ package com.odte.topicurator.entity;
 
 import lombok.Data;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "prosncons")
 @Data
+@Getter
+@Setter
+@NoArgsConstructor
 public class Prosncons {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,13 +36,22 @@ public class Prosncons {
     @Column(length = 255)
     private String pros;
 
-    @Column(columnDefinition = "TEXT")
-    private String neutral;
-
     @Column(length = 255)
     private String cons;
 
     private Integer bias;
 
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    public Prosncons(News news, User createdBy, String summary, String link, String pros, String cons, Integer bias) {
+        this.news = news;
+        this.createdBy = createdBy;
+        this.summary = summary;
+        this.link = link;
+        this.pros = pros;
+        this.cons = cons;
+        this.bias = bias;
+        this.createdAt = LocalDateTime.now();
+    }
 }

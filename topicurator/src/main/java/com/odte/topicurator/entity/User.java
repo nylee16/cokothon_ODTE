@@ -1,12 +1,17 @@
 package com.odte.topicurator.entity;
 
-import lombok.Data;
+import lombok.*;
 import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 @Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,5 +34,17 @@ public class User {
     @Column(length = 255)
     private String job;
 
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    public User(String email, String password, String username, Integer age, String sex, String job) {
+        this.email = email;
+        this.password = password;
+        this.username = username;
+        this.age = age;
+        this.sex = sex;
+        this.job = job;
+        this.createdAt = LocalDateTime.now();
+    }
+
 }
