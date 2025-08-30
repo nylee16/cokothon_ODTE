@@ -15,4 +15,6 @@ public interface ProsConsRepository extends JpaRepository<ProsCons, Long> {
 
     @EntityGraph(attributePaths = {"createdBy", "news"})
     Optional<ProsCons> findWithJoinsById(Long id);
+
+    boolean existsByNews_IdAndLink(Long newsId, String link);
 }
