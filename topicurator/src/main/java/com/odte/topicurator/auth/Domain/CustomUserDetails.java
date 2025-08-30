@@ -19,6 +19,11 @@ public class CustomUserDetails implements UserDetails {
         this.user = user;
     }
 
+    /** 편의 메서드: 도메인 User ID 바로 꺼내기 */
+    public Long getId() {
+        return (user != null) ? user.getId() : null;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(() -> "ROLE_USER");
@@ -34,16 +39,8 @@ public class CustomUserDetails implements UserDetails {
         return userAccount.getUsername();
     }
 
-    @Override
-    public boolean isAccountNonExpired() { return true; }
-
-    @Override
-    public boolean isAccountNonLocked() { return true; }
-
-    @Override
-    public boolean isCredentialsNonExpired() { return true; }
-
-    @Override
-    public boolean isEnabled() { return true; }
+    @Override public boolean isAccountNonExpired() { return true; }
+    @Override public boolean isAccountNonLocked() { return true; }
+    @Override public boolean isCredentialsNonExpired() { return true; }
+    @Override public boolean isEnabled() { return true; }
 }
-

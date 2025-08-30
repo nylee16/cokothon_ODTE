@@ -4,6 +4,7 @@ import com.odte.topicurator.common.dto.ApiResponse;
 import com.odte.topicurator.proscons.application.ProsConsGenerateService;
 import com.odte.topicurator.proscons.controller.dto.ProsConsRes;
 import com.odte.topicurator.proscons.controller.dto.ProsConsSummarizeReq;
+import com.odte.topicurator.auth.Domain.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,9 +29,28 @@ public class ProsConsCommandController {
             @Valid @RequestBody ProsConsSummarizeReq req,
             Authentication authentication // null 가능
     ) {
-        Long uid = authentication != null ? (Long) authentication.getPrincipal() : null;
+        Long uid = resolveUserId(authentication); // <-- 여기서 안전하게 UID 추출
         var res = service.summarize(req, uid);
         String msg = req.saveOrDefault() ? "생성 및 저장 성공" : "생성 성공(미저장)";
         return ResponseEntity.ok(ApiResponse.success(msg, res));
+    }
+
+    /** Authentication에서 안전하게 사용자 ID를 꺼내는 헬퍼 */
+    private Long resolveUserId(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) return null;
+
+        Object principal = authentication.getPrincipal();
+
+        // Spring Security 기본 anonymous 문자열 방지
+        if (principal instanceof String s && "anonymousUser".equalsIgnoreCase(s)) {
+            return null;
+        }
+
+        if (principal instanceof CustomUserDetails cud) {
+            return cud.getId(); // B안: 편의 메서드 사용
+        }
+
+        // 그 외 커스텀 principal 타입을 쓰는 경우 대비 (필요 시 추가)
+        return null;
     }
 }
