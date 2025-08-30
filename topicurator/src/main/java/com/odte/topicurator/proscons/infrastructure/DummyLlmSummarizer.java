@@ -17,7 +17,7 @@ public class DummyLlmSummarizer implements LlmSummarizer {
                 "찬성 포인트(더미)",
                 "중립 관점(더미)",
                 "반대 포인트(더미)",
-                0
+                Short.valueOf((short) 10)
         );
     }
 }

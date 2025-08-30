@@ -8,8 +8,7 @@ import com.odte.topicurator.proscons.domain.ProsCons;
 import com.odte.topicurator.proscons.infrastructure.LlmSummarizer;
 import com.odte.topicurator.proscons.infrastructure.ProsConsRepository;
 import com.odte.topicurator.repository.NewsRepository;
-import com.odte.topicurator.repository.UserRepository; // ✅ 여기로 변경
-
+import com.odte.topicurator.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -24,11 +23,14 @@ public class ProsConsGenerateService {
     private final LlmSummarizer llm;
     private final NewsRepository newsRepo;
     private final ProsConsRepository prosConsRepo;
-    private final UserRepository userRepo; // ✅ 타입 변경
+    private final UserRepository userRepo;
 
     @Transactional
     public ProsConsRes summarize(ProsConsSummarizeReq req, Long requesterIdOrNull) {
         var r = llm.summarizeFromUrl(req.url());
+
+        // bias(int) -> 0~100 클램프 후 short로 변환
+        short normalizedBias = clampToShort0_100(r.bias());
 
         if (req.saveOrDefault()) {
             if (requesterIdOrNull == null) throw new AccessDeniedException("로그인이 필요합니다.");
@@ -41,18 +43,18 @@ public class ProsConsGenerateService {
                 throw new IllegalArgumentException("이미 동일 URL로 생성된 요약이 있습니다.");
             }
 
-            User author = userRepo.findById(requesterIdOrNull)   // ✅ User 반환
+            User author = userRepo.findById(requesterIdOrNull)
                     .orElseThrow(() -> new NoSuchElementException("사용자를 찾을 수 없습니다. ID=" + requesterIdOrNull));
 
             ProsCons pc = new ProsCons();
             pc.setNews(news);
-            pc.setCreatedBy(author);         // ✅ ProsCons.createdBy 가 User인 경우
+            pc.setCreatedBy(author);
             pc.setSummary(r.summary());
             pc.setLink(req.url());
             pc.setPros(r.pros());
             pc.setNeutral(r.neutral());
             pc.setCons(r.cons());
-            pc.setBias(r.bias());
+            pc.setBias(normalizedBias); // <-- 여기!
 
             pc = prosConsRepo.save(pc);
 
@@ -62,9 +64,16 @@ public class ProsConsGenerateService {
             );
         }
 
+        // 미저장 프리뷰
         return new ProsConsRes(
                 null, req.newsId(), null, null,
-                r.summary(), req.url(), r.pros(), r.neutral(), r.cons(), r.bias()
+                r.summary(), req.url(), r.pros(), r.neutral(), r.cons(), normalizedBias
         );
+    }
+
+    private short clampToShort0_100(int v) {
+        if (v < 0) return 0;
+        if (v > 100) return 100;
+        return (short) v;
     }
 }
