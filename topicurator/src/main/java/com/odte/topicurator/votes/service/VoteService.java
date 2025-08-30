@@ -7,6 +7,7 @@ import com.odte.topicurator.entity.Votes;
 import com.odte.topicurator.votes.dto.VoteBreakdownDto;
 import com.odte.topicurator.votes.dto.VoteRequestDto;
 import com.odte.topicurator.votes.dto.VoteSummaryDto;
+import com.odte.topicurator.votes.dto.VoteCreationResponseDto;
 import com.odte.topicurator.votes.repository.VoteRepository;
 import com.odte.topicurator.repository.NewsRepository;
 import com.odte.topicurator.repository.ProsnconsRepository;
