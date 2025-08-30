@@ -20,7 +20,7 @@
       <sourceFolder url="file://$MODULE_DIR$/../../topicurator/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/../../topicurator/src/main/resources" type="java-resource" />
     </content>
-    <orderEntry type="jdk" jdkName="ms-21" jdkType="JavaSDK" />
+    <orderEntry type="jdk" jdkName="21" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="PROVIDED" name="Gradle: org.projectlombok:lombok:1.18.38" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-web:3.5.5" level="project" />
