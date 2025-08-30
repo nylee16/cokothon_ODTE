@@ -3,6 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/cokothon_ODTE.iml" filepath="$PROJECT_DIR$/.idea/cokothon_ODTE.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/topicurator.iml" filepath="$PROJECT_DIR$/.idea/modules/topicurator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/topicurator.main.iml" filepath="$PROJECT_DIR$/.idea/modules/topicurator.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/topicurator.test.iml" filepath="$PROJECT_DIR$/.idea/modules/topicurator.test.iml" />
     </modules>
   </component>
 </project>
