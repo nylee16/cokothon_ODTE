@@ -28,6 +28,9 @@ public class User {
 
     private Integer age;
 
+    @Column(name="birth_year")
+    private Short birthYear;
+
     @Column(length = 20)
     private String sex;
 

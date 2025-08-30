@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.Year;
 import java.util.List;
 
 @Service
@@ -81,7 +82,10 @@ public class VoteService {
     public List<VoteBreakdownDto> getVoteBreakdown(Long newsId, String dimension) {
         return switch (dimension.toLowerCase()) {
             case "gender" -> voteRepository.breakdownByGender(newsId);
-            case "age"    -> voteRepository.breakdownByAge(newsId);
+            case "age"    -> {
+                int currentYear = Year.now().getValue();
+                yield voteRepository.breakdownByAge(newsId, currentYear);
+            }
             case "job"    -> voteRepository.breakdownByJob(newsId);
             default -> throw new IllegalArgumentException("dimension 값은 gender|age|job 중 하나여야 합니다.");
         };

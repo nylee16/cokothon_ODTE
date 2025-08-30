@@ -33,14 +33,14 @@ public interface VoteRepository extends JpaRepository<Votes, Long> {
 
     // 📊 연령대 분포 (10단위로 그룹핑)
     @Query("SELECT new com.odte.topicurator.votes.dto.VoteBreakdownDto(" +
-            "CONCAT((u.age/10)*10, '대'), " +
+            "CONCAT(((CAST(:currentYear AS int) - u.birthYear)/10)*10, '대'), " +
             "SUM(CASE WHEN v.choice = 'PROS' THEN 1 ELSE 0 END), " +
             "SUM(CASE WHEN v.choice = 'CONS' THEN 1 ELSE 0 END), " +
             "SUM(CASE WHEN v.choice = 'NEUTRAL' THEN 1 ELSE 0 END)) " +
             "FROM Votes v JOIN v.user u " +
             "WHERE v.prosncons.news.id = :newsId " +
-            "GROUP BY (u.age/10)")
-    List<VoteBreakdownDto> breakdownByAge(@Param("newsId") Long newsId);
+            "GROUP BY ((CAST(:currentYear AS int) - u.birthYear)/10)")
+    List<VoteBreakdownDto> breakdownByAge(@Param("newsId") Long newsId, @Param("currentYear") int currentYear);
 
     // 📊 직업 분포
     @Query("SELECT new com.odte.topicurator.votes.dto.VoteBreakdownDto(u.job, " +
