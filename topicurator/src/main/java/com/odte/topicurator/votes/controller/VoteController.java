@@ -5,9 +5,11 @@ import com.odte.topicurator.votes.dto.VoteRequestDto;
 import com.odte.topicurator.votes.dto.VoteSummaryDto;
 import com.odte.topicurator.votes.dto.VoteBreakdownDto;
 import com.odte.topicurator.votes.service.VoteService;
-import com.odte.topicurator.common.dto.ApiResponse; // ✅ 추가
+import com.odte.topicurator.common.dto.ApiResponse;
+import com.odte.topicurator.auth.Domain.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,8 +26,9 @@ public class VoteController {
     public ResponseEntity<ApiResponse<Votes>> vote(
             @PathVariable Long newsId,
             @RequestBody VoteRequestDto requestDto,
-            @RequestHeader("X-USER-ID") Long userId // ⚠️ JWT 연동 시 교체 예정
+            @AuthenticationPrincipal CustomUserDetails userDetails // ✅ JWT 연동된 사용자 정보 주입
     ) {
+        Long userId = userDetails.getId(); // User 엔티티 ID 바로 꺼냄
         Votes vote = voteService.vote(newsId, userId, requestDto);
         return ResponseEntity.ok(ApiResponse.success("투표 등록 성공", vote));
     }

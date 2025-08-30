@@ -1,0 +1,59 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: topicurator
+
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:topicurator;MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: update          # 개발 중에도 데이터 초기화 피하려면 update 권장 (초기 1회만 create)
+    show-sql: false             # 콘솔 난잡함 방지 (SQL은 로거로 확인)
+    open-in-view: false         # 트랜잭션 경계 명확화
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc.time_zone: UTC     # DB에는 UTC로 저장
+    database-platform: org.hibernate.dialect.H2Dialect
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        trace: false
+        web-allow-others: false # 로컬 전용(원격 접속 필요시 true로)
+
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui           # 접속: http://localhost:8080/swagger-ui
+  api-docs:
+    path: /v3/api-docs
+
+jwt:
+  secret: "cokothonthisisveryverylongstringsecretkeycokothonthisisveryverylongstringsecretkey"
+  access-ttl-min: 15
+  refresh-ttl-days: 14
+
+logging:
+  level:
+    root: INFO
+    org.springframework.security: INFO
+    org.hibernate.SQL: DEBUG            # 실행된 SQL
+    org.hibernate.orm.jdbc.bind: TRACE  # 바인드 파라미터 (시끄러우면 INFO/DEBUG로 낮춰도 됨)
+
+llm:
+  provider: gemini
+  api-key: AIzaSyCDjxnT9kWNnCdR3XITGguBVhm8J2oEbYo
+  base-url: https://generativelanguage.googleapis.com
+  model: gemini-2.0-flash
