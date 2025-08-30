@@ -22,7 +22,7 @@
 | 이름 | 역할 분담 |
 |------|----------|
 | [김성희](https://github.com/dmseong) | 백엔드: 뉴스 · 댓글 |
-| [이나연](https://github.com/nylee16)) | 프론트엔드 · 디자인 |
+| [이나연](https://github.com/nylee16) | 프론트엔드 · 디자인 |
 | [이승진](https://github.com/luckyisjelly) | 백엔드: Auth · Gemini API 연동 |
 | [조시연](https://github.com/jimmy914) | 백엔드: 투표 · 통계 |
 
