@@ -1,4 +1,4 @@
-package com.odte.topicurator.News.dto;
+package com.odte.topicurator.News;
 
 import java.time.LocalDateTime;
 

@@ -1,7 +1,5 @@
-package com.odte.topicurator.News.controller;
+package com.odte.topicurator.News;
 
-import com.odte.topicurator.News.dto.NewsTopDto;
-import com.odte.topicurator.News.service.NewsService;
 import com.odte.topicurator.common.dto.ApiResponse; // ✅ 추가
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

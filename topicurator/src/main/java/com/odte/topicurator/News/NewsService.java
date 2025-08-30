@@ -1,6 +1,5 @@
-package com.odte.topicurator.News.service;
+package com.odte.topicurator.News;
 
-import com.odte.topicurator.News.dto.NewsTopDto;
 import com.odte.topicurator.entity.News;
 import com.odte.topicurator.repository.NewsRepository;
 import lombok.RequiredArgsConstructor;
