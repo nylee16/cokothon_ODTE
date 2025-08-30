@@ -4,20 +4,27 @@ server:
 spring:
   application:
     name: topicurator
+
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/topicurator?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
-    username: odte
-    password: odte1234
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:topicurator;MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+
   jpa:
     hibernate:
-      ddl-auto: create   # 초기 개발 땐 create, 이후엔 update/validate로 변경 권장
+      ddl-auto: create   # 초기 개발 땐 create, 이후엔 update/validate 권장
     show-sql: true
     properties:
       hibernate:
         format_sql: true
         jdbc.time_zone: UTC    # DB에는 UTC로 저장
-    database-platform: org.hibernate.dialect.MySQLDialect
+    database-platform: org.hibernate.dialect.H2Dialect  # H2 사용이므로 H2Dialect
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
 
   jackson:
     serialization:
@@ -30,8 +37,7 @@ springdoc:
     path: /v3/api-docs
 
 jwt:
-  # 32바이트 키(Base64). 필요하면 아무 문자열로 교체 가능하지만 32바이트 이상 권장.
-  secret: "cokothon_this_is_very_very_long_string_secret_key_cokothon_this_is_very_very_long_string_secret_key"
+  secret: "cokothonthisisveryverylongstringsecretkeycokothonthisisveryverylongstringsecretkey"
   access-ttl-min: 15
   refresh-ttl-days: 14
 
@@ -39,4 +45,4 @@ logging:
   level:
     org.springframework.security: INFO
     org.hibernate.SQL: INFO
-    org.hibernate.orm.jdbc.bind: TRACE  # 바인딩 값 로그가 많으면 INFO로 낮춰도 됨
+    org.hibernate.orm.jdbc.bind: TRACE   # 너무 시끄러우면 INFO로 낮추기
