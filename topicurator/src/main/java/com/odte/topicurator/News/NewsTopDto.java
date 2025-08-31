@@ -7,9 +7,10 @@ public record NewsTopDto(
         String title,
         String description,
         String teaserText,
-        String username,
+        String createdByUsername,
         Long views,
         LocalDateTime createdAt,
         String imageUrl,
-        String category
+        String category,
+        Long prosconsId // Proscons ID만 추가
 ) {}

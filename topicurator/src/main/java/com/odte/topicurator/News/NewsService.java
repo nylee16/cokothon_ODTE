@@ -1,6 +1,7 @@
 package com.odte.topicurator.News;
 
 import com.odte.topicurator.entity.News;
+import com.odte.topicurator.entity.Proscons;
 import com.odte.topicurator.repository.NewsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,11 +19,13 @@ public class NewsService {
 
     private final NewsRepository newsRepository;
 
+    // 뉴스 상세 조회 (Proscons ID 포함)
     @Transactional(readOnly = true)
     public NewsTopDto getNewsDetail(Long newsId) {
-        // createdBy 접근이 필요하므로 트랜잭션 안에서 DTO로 변환
         News n = newsRepository.findById(newsId)
                 .orElseThrow(() -> new RuntimeException("뉴스를 찾을 수 없습니다. ID: " + newsId));
+
+        Long prosconsId = n.getProscons() != null ? n.getProscons().getId() : null;
 
         return new NewsTopDto(
                 n.getId(),
@@ -33,47 +36,59 @@ public class NewsService {
                 n.getViews(),
                 n.getCreatedAt(),
                 n.getImageUrl(),
-                n.getCategory()
+                n.getCategory(),
+                prosconsId
         );
     }
 
+    // 상위 뉴스 조회 (Proscons ID 포함)
     @Transactional(readOnly = true)
     public List<NewsTopDto> getTopNews(int limit, String period) {
-        LocalDateTime since = parsePeriodSafe(period); // ✅ NPE/형식오류 방지
-        var page = PageRequest.of(0, Math.max(1, limit)); // 최소 1
-        var slice = newsRepository.findByCreatedAtAfterOrderByViewsDesc(since, page);
+        LocalDateTime since = parsePeriodSafe(period);
+        Pageable page = PageRequest.of(0, Math.max(1, limit));
 
-        return slice.getContent().stream()
-                .map(n -> new NewsTopDto(
-                        n.getId(),
-                        n.getTitle(),
-                        n.getDescription(),
-                        n.getTeaserText(),
-                        n.getCreatedBy() != null ? n.getCreatedBy().getUsername() : null,
-                        n.getViews(),
-                        n.getCreatedAt(),
-                        n.getImageUrl(),
-                        n.getCategory()
-                ))
+        return newsRepository.findByCreatedAtAfterOrderByViewsDesc(since, page)
+                .getContent().stream()
+                .map(n -> {
+                    Long prosconsId = n.getProscons() != null ? n.getProscons().getId() : null;
+                    return new NewsTopDto(
+                            n.getId(),
+                            n.getTitle(),
+                            n.getDescription(),
+                            n.getTeaserText(),
+                            n.getCreatedBy() != null ? n.getCreatedBy().getUsername() : null,
+                            n.getViews(),
+                            n.getCreatedAt(),
+                            n.getImageUrl(),
+                            n.getCategory(),
+                            prosconsId
+                    );
+                })
                 .toList();
     }
 
+    // 카테고리별 뉴스 조회 (Proscons ID 포함)
     @Transactional(readOnly = true)
     public Page<NewsTopDto> getNewsByCategory(String category, Pageable pageable) {
         return newsRepository.findByCategoryOrderByCreatedAtDesc(category, pageable)
-                .map(n -> new NewsTopDto(
-                        n.getId(),
-                        n.getTitle(),
-                        n.getDescription(),
-                        n.getTeaserText(),
-                        n.getCreatedBy() != null ? n.getCreatedBy().getUsername() : null,
-                        n.getViews(),
-                        n.getCreatedAt(),
-                        n.getImageUrl(),
-                        n.getCategory()
-                ));
+                .map(n -> {
+                    Long prosconsId = n.getProscons() != null ? n.getProscons().getId() : null;
+                    return new NewsTopDto(
+                            n.getId(),
+                            n.getTitle(),
+                            n.getDescription(),
+                            n.getTeaserText(),
+                            n.getCreatedBy() != null ? n.getCreatedBy().getUsername() : null,
+                            n.getViews(),
+                            n.getCreatedAt(),
+                            n.getImageUrl(),
+                            n.getCategory(),
+                            prosconsId
+                    );
+                });
     }
 
+    // 조회수 증가
     @Transactional
     public void increaseViews(Long newsId) {
         News news = newsRepository.findById(newsId)
@@ -81,7 +96,7 @@ public class NewsService {
         news.setViews(news.getViews() == null ? 1 : news.getViews() + 1);
     }
 
-    // ✅ null/빈문자/형식오류 모두 처리 (기본: 24시간)
+    // 기간 파싱 (안전하게 처리)
     private LocalDateTime parsePeriodSafe(String period) {
         LocalDateTime now = LocalDateTime.now();
         if (period == null || period.isBlank()) return now.minusHours(24);
@@ -95,7 +110,7 @@ public class NewsService {
                 return now.minusDays(Math.max(1, days));
             }
         } catch (NumberFormatException ignore) {
-            // fall through to default
+            // 기본: 24시간 전
         }
         return now.minusHours(24);
     }

@@ -2,7 +2,6 @@ package com.odte.topicurator.entity;
 
 import lombok.*;
 import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
 
 @Entity
@@ -13,6 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class News {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -40,6 +40,10 @@ public class News {
 
     @Column(name = "image_url", length = 255)
     private String imageUrl;
+
+    // 1:1 관계로 Proscons 연결
+    @OneToOne(mappedBy = "news", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Proscons proscons;
 
     public News(User createdBy, String title, String description, String category, String teaserText, String imageUrl) {
         this.createdBy = createdBy;

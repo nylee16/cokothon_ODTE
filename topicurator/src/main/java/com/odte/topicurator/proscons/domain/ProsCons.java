@@ -38,13 +38,13 @@ public class ProsCons {
     @Column(length = 255, nullable = false)
     private String link;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
+    @Column(columnDefinition = "TEXT", nullable = true)
     private String pros;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
-    private String neutral;
+    @Column(columnDefinition = "TEXT", nullable = true)
+    private String neutral="";
 
-    @Column(columnDefinition = "TEXT", nullable = false)
+    @Column(columnDefinition = "TEXT", nullable = true)
     private String cons;
 
     @Column(nullable = false)
