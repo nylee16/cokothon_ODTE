@@ -1,0 +1,139 @@
+.signup-container {
+  min-width: 400px;
+  max-width: 450px;
+  padding: 5px 32px;
+  background-color: #fff;
+  border-radius: 22px;
+  box-shadow: 0 6px 24px rgba(44,67,133,0.10);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logo-img {
+  width: 90px;
+  margin-bottom: 20px;
+}
+
+.signup-link {
+  display: block;
+  margin-bottom: 28px;
+  font-size: 16px;
+  color: #2e3a8c;
+  text-decoration: underline;
+  font-weight: 700;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+  align-items: center;
+  margin:0;
+}
+
+input {
+  width: 100%;
+  background: #a3aec9;
+  color: #fff;
+  padding: 16px;
+  border-radius: 20px;
+  border: none;
+  font-size: 17px;
+  font-weight: bold;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+button {
+  width: 60%;
+  margin: 0 auto;
+  padding: 12px 0;
+  border-radius: 16px;
+  border: none;
+  background: #bbbfe7;
+  color: #fff;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 10px;
+}
+
+button:hover {
+  background: #7c82ba;
+}
+
+.error {
+  margin-top: 1px;
+  color: #e74949;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.success {
+  margin-top: 14px;
+  color: #119955;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.signup-container input,
+.signup-container select {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 16px;
+  border: none;
+  border-radius: 20px;
+  background: #b6bcdb;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.signup-container select {
+  /* select와 input을 완전히 같은 스타일로 맞춤 */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.signup-container button {
+  width: 100%;
+  padding: 14px;
+  background: #b6bcdb;
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 20px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.signup-link {
+  display: block;
+  text-align: center;
+  color: #343477;
+  text-decoration: underline;
+  margin-top: 20px;
+  font-size: 1rem;
+}
+
+/* Sign up 버튼 색깔 변경 예시 */
+.signup-container button {
+  background: #be8dd1;  /* 원하는 색상 코드로 변경 */
+  color: #fff;          /* 버튼 텍스트 색깔 */
+}
+
+/* Sign up 버튼 호버 색깔도 변경하려면 함께 수정 */
+.signup-container button:hover {
+  background: #357abd;  /* 어둡고 진한 색상으로 변경 */
+}
+
+/* ID, PW, PW 확인 placeholder 글씨 색깔 변경 */
+.signup-container input::placeholder {
+  color: #ffffff;       /* 원하는 색상 코드로 변경 */
+  opacity: 1;           /* 투명도 조절 */
+}

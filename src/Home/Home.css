@@ -1,0 +1,310 @@
+.home-container {
+ width: 100vw;
+ background: white;
+}
+
+.navbar {
+ width: 100vw;
+ height:70px;
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ padding: 10px 40px;
+ background: #fff;
+ box-shadow: 0 2px 10px rgba(44,67,133,0.05);
+ box-sizing: border-box; /* padding과 border를 width에 포함 */
+ padding-bottom:40px;
+}
+.navbar-logo {
+ padding-right:70px;
+}
+.navbar-logo img {
+ width: 130px;
+ height: auto;
+ display: block;
+ padding-bottom:30px;
+}
+.navbar-menu {
+ display: flex;
+ gap: 100px;
+ flex: 1 1 auto;
+ justify-content: flex-start; /* left 대신 flex-start 권장 */
+ padding-bottom:25px;
+}
+.navbar-menu a {
+ font-size: 20px;
+ font-weight: 500;
+ text-decoration: none;
+ color: black !important;
+}
+.navbar-menu a:hover {
+ text-decoration: underline; /* 호버 시 밑줄 표시 */
+ border-radius: 4px; /* 부드러운 모서리 */
+}
+.navbar-right {
+ display: flex;
+ align-items: center;
+ gap: 15px;
+}
+.navbar-analyzer {
+ font-size: 14px;
+ color: #007bff;
+ text-decoration: none;
+ padding: 8px 16px;
+ border: 2px solid #007bff;
+ border-radius: 20px;
+ transition: all 0.3s;
+}
+.navbar-analyzer:hover {
+ background: #007bff;
+ color: white;
+}
+.navbar-profile-link {
+ text-decoration: none;
+}
+.navbar-profile {
+ width: 40px;
+ height: 40px;
+ background: #eee;
+ border-radius: 50%;
+ margin-bottom:15px;
+ cursor: pointer;
+ transition: transform 0.2s;
+}
+.navbar-profile:hover {
+ transform: scale(1.1);
+}
+.navbar-logout {
+ font-size: 15px;
+ color: #333;
+ cursor: pointer;
+ background-color:transparent;
+ width:100px;
+ padding-bottom: 20px;
+ margin-top:0px;
+}
+.navbar-logout:hover {
+ background: #fff;/* 혹은 원하는 색상으로 */
+ color: red; /* 호버 시 색상 변경 */
+ text-decoration: underline; /* 밑줄 추가 */
+}
+
+/* 메인 콘텐츠 */
+main {
+ padding: 40px;
+}
+
+.welcome-section {
+ text-align: center;
+ margin-bottom: 60px;
+}
+
+.welcome-section h1 {
+ font-size: 3rem;
+ color: #333;
+ margin-bottom: 20px;
+}
+
+.welcome-section p {
+ font-size: 1.3rem;
+ color: #666;
+ margin-bottom: 40px;
+}
+
+.action-buttons {
+ display: flex;
+ gap: 20px;
+ justify-content: center;
+}
+
+.action-btn {
+ padding: 15px 30px;
+ border-radius: 8px;
+ text-decoration: none;
+ font-weight: 600;
+ font-size: 1.1rem;
+ transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.action-btn.primary {
+ background: linear-gradient(135deg, #007bff, #0056b3);
+ color: white;
+}
+
+.action-btn.primary:hover {
+ transform: translateY(-2px);
+ box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+.action-btn.secondary {
+ background: white;
+ color: #007bff;
+ border: 2px solid #007bff;
+}
+
+.action-btn.secondary:hover {
+ transform: translateY(-2px);
+ box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+}
+
+.news-section {
+ margin-bottom: 60px;
+}
+
+.news-section h2 {
+ font-size: 2rem;
+ color: #333;
+ margin-bottom: 30px;
+ text-align: center;
+}
+
+.news-list {
+ display: flex;
+ gap: 40px;
+ justify-content: center;
+ min-width:500px;
+}
+.news-card {
+ position: relative;
+ width: 30%;
+ height: 35vw;
+ border-radius: 22px;
+ box-shadow: 0 6px 24px rgba(44,67,133,0.10);
+ overflow: hidden;
+ display: flex;
+ flex-direction: column;
+ align-items: stretch;
+}
+.news-img {
+ width: 100%;
+ height: 100%;
+ object-fit: cover;
+ display: block;
+}
+.news-overlay {
+ position: absolute;
+ bottom: 0;
+ left: 0;
+ width: 100%;
+ height:40%;
+ padding: 24px 16px 16px 16px;
+ background-color: rgba(255,255,255,0.7); /* 반투명 흰색 */
+ text-align: left;
+ z-index: 2;
+}
+.news-overlay h3 {
+ margin:12px;
+ font-size: 2em;
+ font-weight: bold;
+}
+.news-overlay p {
+ color: #333;
+ font-size: 1.5em;
+ margin:15px;
+}
+
+.features-section {
+ margin-top: 80px;
+}
+
+.features-section h2 {
+ font-size: 2rem;
+ color: #333;
+ margin-bottom: 40px;
+ text-align: center;
+}
+
+.features-grid {
+ display: grid;
+ grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+ gap: 30px;
+ max-width: 1200px;
+ margin: 0 auto;
+}
+
+.feature-card {
+ background: white;
+ padding: 30px;
+ border-radius: 12px;
+ box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+ text-align: center;
+ transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.feature-card:hover {
+ transform: translateY(-5px);
+ box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.feature-icon {
+ font-size: 3rem;
+ margin-bottom: 20px;
+}
+
+.feature-card h3 {
+ font-size: 1.5rem;
+ color: #333;
+ margin-bottom: 15px;
+}
+
+.feature-card p {
+ color: #666;
+ line-height: 1.6;
+ margin-bottom: 20px;
+}
+
+.feature-link {
+ color: #007bff;
+ text-decoration: none;
+ font-weight: 600;
+ transition: color 0.3s;
+}
+
+.feature-link:hover {
+ color: #0056b3;
+ text-decoration: underline;
+}
+
+/* 카드 뉴스 등 기존 스타일 뒤에 배치 */
+.main {
+ width: 100vw;
+ display: flex;
+ justify-content: center;
+}
+
+@media (max-width: 768px) {
+ .navbar {
+   padding: 10px 20px;
+ }
+ 
+ .navbar-menu {
+   gap: 40px;
+ }
+ 
+ .navbar-right {
+   gap: 10px;
+ }
+ 
+ .welcome-section h1 {
+   font-size: 2rem;
+ }
+ 
+ .action-buttons {
+   flex-direction: column;
+   align-items: center;
+ }
+ 
+ .features-grid {
+   grid-template-columns: 1fr;
+ }
+ 
+ .news-list {
+   flex-direction: column;
+   align-items: center;
+ }
+ 
+ .news-card {
+   width: 80%;
+   height: 50vw;
+ }
+}

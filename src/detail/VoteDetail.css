@@ -1,0 +1,347 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto; /* 스크롤이 body 에만 */
+  scroll-behavior: auto !important;
+}
+
+.vote-navbar-unique {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 120px; /* 네비게이션 바 높이 지정 */
+  background: white;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  box-sizing: border-box;
+  border-bottom: 2px solid #eee;
+}
+
+/* 네비게이션 컨테이너는 height만큼 위쪽에 공간을 확보 */
+.vote-detail-unique-container {
+  padding-top: 100px; /* nav 높이와 동일하게 */
+  background: #f6f7fa;
+  min-height: 100vh;
+  width: 100%;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+/* 네비게이션 바 내부 이미지 및 메뉴 스타일 유지 */
+.vote-navbar-logo img {
+  width: 130px;
+  height: auto;
+  display: block;
+  padding-right: 70px;
+  padding-bottom:0px;
+  padding-left:5px;
+}
+
+.vote-navbar-menu {
+  display: flex;
+  gap: 100px;
+  flex: 1 1 auto;
+  justify-content: flex-start;
+  padding-bottom: 25px;
+  padding-top:10px;
+}
+
+.vote-navbar-menu a {
+  font-size: 19px;
+  font-weight: 500;
+  text-decoration: none;
+  color: #222;
+}
+
+.vote-navbar-menu a:hover {
+  text-decoration: underline;
+}
+
+.vote-navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.vote-navbar-profile {
+  width: 38px;
+  height: 38px;
+  background: #eee;
+  border-radius: 50%;
+}
+
+.vote-navbar-logout {
+  background: none;
+  border: none;
+  font-size: 15px;
+  color: #222;
+  cursor: pointer;
+  padding-right:10px;
+  padding-bottom:20px;
+}
+
+.vote-navbar-logout:hover {
+  background: #fff;
+  color: red;
+  text-decoration: underline;
+}
+
+
+/* 메인 영역 */
+.vote-detail-unique-main {
+  position: fixed;
+  top: 120px; /* 네비 높이 */
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
+  max-width: 1200px; /* 기존 850px에서 확장 */
+  margin: 0 auto;
+  padding: 24px;
+  background: white;
+  overflow-x: hidden; /* 혹시 있을 가로스크롤 방지 */
+}
+
+.vote-detail-unique-title {
+  font-size: 2.2rem;
+  font-weight: bold;
+  margin-bottom: 18px;
+  color: #222;
+}
+
+.vote-detail-unique-card {
+  margin-bottom: 34px;
+}
+
+.vote-detail-unique-news-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #2a2a4f;
+  margin-bottom: 17px;
+  display: block;
+}
+
+/* 찬성/중도/반대 박스 */
+.vote-detail-unique-summary-cards {
+  display: flex;
+  gap: 24px;
+  margin: 20px 0 0 0;
+}
+
+.vote-detail-unique-summary-box {
+  flex: 1;
+  padding: 26px 0 18px 0;
+  background: #fff;
+  border: 2px solid #6667b0;
+  border-radius: 16px;
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #6667b0;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.vote-detail-unique-divider {
+  border: none;
+  border-top: 2px solid #6667b0;
+  margin: 36px 0 30px 0;
+}
+
+/* 나이대별 결과 */
+.vote-detail-unique-age-title {
+  font-size: 1.15rem;
+  font-weight: bold;
+  margin-bottom: 25px;
+  color: #222;
+}
+
+.vote-detail-unique-age-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 17px;
+}
+
+.vote-detail-unique-age-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 2px;
+}
+
+.vote-detail-unique-age-label {
+  width: 40px;
+  font-size: 1rem;
+  color: #222;
+  text-align: left;
+}
+
+.vote-detail-unique-age-bar-outer {
+  flex: 1;
+  height: 18px;
+  border-radius: 9px;
+  background: #f0f0ff;
+  position: relative;
+  margin: 0 7px;
+  overflow: hidden;
+}
+
+.vote-detail-unique-age-bar-inner {
+  height: 100%;
+  background: #928fe0;
+  border-radius: 9px;
+  transition: width 0.4s;
+}
+
+.vote-detail-unique-age-percent {
+  font-size: 1rem;
+  color: #222;
+  min-width: 38px;
+  text-align: right;
+}
+
+/* 직업별 결과 */
+.vote-detail-unique-job-title {
+  font-size: 1.15rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #222;
+}
+
+.vote-detail-unique-job-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.vote-detail-unique-job-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 2px;
+}
+
+.vote-detail-unique-job-label {
+  width: 60px;
+  font-size: 1rem;
+  color: #222;
+  text-align: left;
+}
+
+.vote-detail-unique-job-bar-outer {
+  flex: 1;
+  height: 18px;
+  border-radius: 9px;
+  background: #f0f0ff;
+  margin: 0 7px;
+  overflow: hidden;
+}
+
+.vote-detail-unique-job-bar-inner {
+  height: 100%;
+  background: #928fe0;
+  border-radius: 9px;
+  transition: width 0.4s;
+}
+.vote-detail-unique-job-percent {
+  min-width: 34px;
+  font-size: 1rem;
+  color: #222;
+}
+
+/* 댓글 및 의견 공유 */
+.vote-detail-unique-comment-title {
+  font-size: 1.15rem;
+  font-weight: bold;
+  margin-bottom: 14px;
+}
+.vote-detail-unique-comment-box {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-bottom: 24px;
+}
+.vote-detail-unique-comment-input {
+  font-size: 1rem;
+  border: 1.5px solid #928fe0;
+  border-radius: 8px;
+  padding: 19px;
+  width: 100%;
+  resize: vertical;
+  min-height: 70px;
+  margin-bottom: 8px;
+}
+.vote-detail-unique-comment-submit {
+  align-self: flex-end;
+  background: #928fe0;
+  color: #fff;
+  padding: 10px 32px;
+  font-size: 1.05rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.25s;
+}
+.vote-detail-unique-comment-submit:hover {
+  background: #6667b0;
+}
+
+/* 댓글 리스트 */
+.vote-detail-unique-comments {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.vote-detail-unique-comment-item {
+  background: #f8f8fb;
+  border-radius: 12px;
+  padding: 12px 19px 12px 17px;
+  font-size: 1rem;
+}
+.vote-detail-unique-comment-header {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin-bottom: 5px;
+}
+.vote-detail-unique-comment-username {
+  font-weight: bold;
+  color: #222;
+}
+.vote-detail-unique-comment-type {
+  background: #ccc;
+  color: #333;
+  padding: 2px 7px;
+  border-radius: 7px;
+  font-size: 0.9rem;
+}
+.vote-detail-unique-comment-date {
+  margin-left: auto;
+  font-size: 0.92rem;
+  color: #888;
+}
+.vote-detail-unique-comment-content {
+  margin-bottom: 13px;
+  color: #222;
+}
+.vote-detail-unique-comment-actions {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.vote-detail-unique-comment-action-icon {
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+  cursor: pointer;
+}
+.vote-detail-unique-comment-action-count {
+  font-size: 0.96rem;
+  color: #444;
+  margin-right: 6px;
+}
