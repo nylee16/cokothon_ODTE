@@ -41,7 +41,7 @@ const NewsAnalyzer = () => {
         }));
         setUserVote(voteType);
         setError(''); // 성공 시 에러 메시지 제거
-        
+
         // 사용자에게 저장 안내
         setError('임시 투표가 완료되었습니다. 영구 저장을 위해 "분석 결과 저장"을 클릭해주세요.');
         return;
@@ -187,7 +187,7 @@ const NewsAnalyzer = () => {
             ...prev,
             newsId: savedData.id
           }));
-          
+
           // 임시 투표가 있었다면 실제 투표로 전송
           if (userVote) {
             try {
@@ -196,7 +196,7 @@ const NewsAnalyzer = () => {
               }, {
                 headers: { Authorization: `Bearer ${token}` }
               });
-              
+
               if (voteResponse.data.success) {
                 alert('찬반 분석과 투표가 모두 저장되었습니다!');
               } else {
@@ -209,7 +209,7 @@ const NewsAnalyzer = () => {
           } else {
             alert('찬반 분석이 저장되었습니다!');
           }
-          
+
           setError(''); // 에러 메시지 제거
         } else {
           alert('저장은 성공했지만 뉴스 ID를 받지 못했습니다.');
@@ -327,16 +327,16 @@ const NewsAnalyzer = () => {
                         </div>
                     )}
                     <div className="vote-section">
-                      <button 
-                        className={`vote-btn ${userVote === 'pros' ? 'voted' : ''}`}
-                        onClick={() => handleVote('pros')}
-                        title="투표하기"
+                      <button
+                          className={`vote-btn ${userVote === 'pros' ? 'voted' : ''}`}
+                          onClick={() => handleVote('pros')}
+                          title="투표하기"
                       >
                         👍 찬성
                       </button>
                       <span className="vote-count">{voteCounts.pros}</span>
                       {!result.newsId && (
-                        <p className="vote-hint">임시 투표 가능 (저장 후 영구 저장)</p>
+                          <p className="vote-hint">임시 투표 가능 (저장 후 영구 저장)</p>
                       )}
                     </div>
                   </div>
@@ -351,16 +351,16 @@ const NewsAnalyzer = () => {
                         </div>
                     )}
                     <div className="vote-section">
-                      <button 
-                        className={`vote-btn ${userVote === 'neutral' ? 'voted' : ''}`}
-                        onClick={() => handleVote('neutral')}
-                        title="투표하기"
+                      <button
+                          className={`vote-btn ${userVote === 'neutral' ? 'voted' : ''}`}
+                          onClick={() => handleVote('neutral')}
+                          title="투표하기"
                       >
                         🤔 중립
                       </button>
                       <span className="vote-count">{voteCounts.neutral}</span>
                       {!result.newsId && (
-                        <p className="vote-hint">임시 투표 가능 (저장 후 영구 저장)</p>
+                          <p className="vote-hint">임시 투표 가능 (저장 후 영구 저장)</p>
                       )}
                     </div>
                   </div>
@@ -375,16 +375,16 @@ const NewsAnalyzer = () => {
                         </div>
                     )}
                     <div className="vote-section">
-                      <button 
-                        className={`vote-btn ${userVote === 'cons' ? 'voted' : ''}`}
-                        onClick={() => handleVote('cons')}
-                        title="투표하기"
+                      <button
+                          className={`vote-btn ${userVote === 'cons' ? 'voted' : ''}`}
+                          onClick={() => handleVote('cons')}
+                          title="투표하기"
                       >
                         👎 반대
                       </button>
                       <span className="vote-count">{voteCounts.cons}</span>
                       {!result.newsId && (
-                        <p className="vote-hint">임시 투표 가능 (저장 후 영구 저장)</p>
+                          <p className="vote-hint">임시 투표 가능 (저장 후 영구 저장)</p>
                       )}
                     </div>
                   </div>
