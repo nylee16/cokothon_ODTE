@@ -9,22 +9,39 @@ export default function Home() {
   const [newsList, setNewsList] = useState([]);
   const navigate = useNavigate();
 
-  // 뉴스 목록 API 호출
   useEffect(() => {
+    const accessToken = localStorage.getItem('accessToken');
+    if (!accessToken) {
+      navigate('/login');
+      return;
+    }
+
     axios
-      .get('/api/news?page=0&size=10&sort=createdAt,desc', {
-        headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
+      .get('/api/news/top?limit=3&period=24h', {
+        headers: { Authorization: `Bearer ${accessToken}` },
       })
-      .then((res) => setNewsList(res.data.content || []))
-      .catch(() => setNewsList([]));
-  }, []);
+      .then((res) => {
+        if (res.data.success) {
+          setNewsList(res.data.data); // data 배열 사용
+        } else {
+          setNewsList([]);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        setNewsList([]);
+        if (err.response && (err.response.status === 401 || err.response.status === 403)) {
+          handleLogout();
+        }
+      });
+  }, [navigate]);
 
   const handleLogout = () => {
-    localStorage.removeItem('authToken');
-    navigate('/');
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    navigate('/login');
   };
 
-  // 카드 클릭 시 상세 페이지 이동
   const handleCardClick = (newsId) => {
     navigate(`/news/${newsId}`);
   };
@@ -53,7 +70,7 @@ export default function Home() {
       </nav>
       <main>
         <div className="news-list">
-          {newsList.map((news, idx) => (
+          {newsList.map((news) => (
             <div
               className="news-card"
               key={news.id}
@@ -61,17 +78,18 @@ export default function Home() {
               style={{ cursor: 'pointer' }}
               role="button"
               tabIndex={0}
-              onKeyDown={(e) => { if (e.key === 'Enter') handleCardClick(news.id); }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleCardClick(news.id);
+              }}
             >
-              {/* image_url 컬럼 값이 있을 때 require로 읽어서 이미지를 로컬에서 출력 */}
               <img
-                src={news.image_url ? require(`../assets/${news.image_url}`) : require('../assets/default.jpg')}
+                src={news.imageUrl || '/assets/default.jpg'} // imageUrl 사용
                 alt={news.title}
                 className="news-img"
               />
               <div className="news-overlay">
                 <h3>{news.title}</h3>
-                <p>{news.teaser_text}</p>
+                <p>{news.teaserText}</p> {/* teaserText 사용 */}
               </div>
             </div>
           ))}

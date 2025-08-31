@@ -35,7 +35,7 @@
  font-size: 20px;
  font-weight: 500;
  text-decoration: none;
- color: inherit;
+ color: black !important;
 }
 .navbar-menu a:hover {
  text-decoration: underline; /* 호버 시 밑줄 표시 */
