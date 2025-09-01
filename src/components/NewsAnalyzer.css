@@ -61,6 +61,7 @@
   border-radius: 25px;
   background: #e3f2fd;
   transition: all 0.3s ease;
+  margin-top:-1px;
 }
 
 .navbar-analyzer.active {

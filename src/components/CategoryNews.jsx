@@ -157,17 +157,8 @@ const CategoryNews = () => {
           {news.map((item) => (
               <div key={item.id} className="news-card">
                 <div className="news-image">
-                  <img
-                      src={item.imageUrl || '/news1.jpg'}
-                      alt={item.title}
-                      onError={(e) => {
-                        e.target.src = '/news1.jpg';
-                      }}
-                  />
-                  <div className="category-badge" style={{ backgroundColor: getCategoryColor(category) }}>
-                    {getCategoryDisplayName(category)}
-                  </div>
-                </div>
+                  {/* 이미지 렌더링 제거, 빈 div 또는 다른 컨텐츠로 대체 가능 */}
+              </div>
 
                 <div className="news-content">
                   <h3

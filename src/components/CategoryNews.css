@@ -1,7 +1,9 @@
 .category-news {
+  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
+  box-sizing: border-box;
 }
 
 .category-header {
@@ -9,6 +11,7 @@
   align-items: center;
   margin-bottom: 30px;
   gap: 20px;
+  padding-top:200px;
 }
 
 .back-btn {
@@ -20,6 +23,10 @@
   cursor: pointer;
   font-size: 1rem;
   transition: background-color 0.3s;
+  width: 200px;
+
+  margin-left: 15px; /* 왼쪽에 공간 없도록 */
+  /* 필요하면 margin-right 값으로 오른쪽 공간 띄우기 */
 }
 
 .back-btn:hover {
@@ -29,7 +36,8 @@
 .category-info h1 {
   margin: 0;
   color: #333;
-  font-size: 2.5rem;
+  font-size: 3rem;
+  padding-right:100px;
 }
 
 .category-info p {
@@ -87,6 +95,8 @@
   overflow: hidden;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s, box-shadow 0.3s;
+  width: 550px;
+  height:400px;
 }
 
 .news-card:hover {
@@ -97,7 +107,6 @@
 .news-image {
   position: relative;
   height: 200px;
-  overflow: hidden;
 }
 
 .news-image img {
@@ -124,7 +133,8 @@
 }
 
 .news-content {
-  padding: 20px;
+  padding: 15px;
+  width:500px;
 }
 
 .news-title {
